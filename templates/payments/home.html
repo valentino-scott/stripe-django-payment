@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Products - Stripe Demo Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="text-center mb-4">Demo Products</h1>
+        <p class="text-center text-muted mb-5">
+            Test Stripe Checkout with these demo products. All payments are in test mode.
+        </p>
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-6">
+                <div class="card product-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            ${{ product.price|floatformat:2 }}
+                        </h6>
+                        <p class="card-text">{{ product.description }}</p>
+                        
+                        <form method="POST" action="{% url 'create_checkout_session' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            
+                            <div class="mb-3">
+                                <label for="email-{{ product.id }}" class="form-label">
+                                    Test Email (for demo)
+                                </label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email-{{ product.id }}"
+                                       name="customer_email"
+                                       value="test@example.com"
+                                       required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                Buy Now - ${{ product.price|floatformat:2 }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Testing Instructions</h5>
+            </div>
+            <div class="card-body">
+                <h6>Test Card Numbers:</h6>
+                <ul>
+                    <li><strong>Success:</strong> 4242 4242 4242 4242</li>
+                    <li><strong>Requires authentication:</strong> 4000 0027 6000 3184</li>
+                    <li><strong>Declined:</strong> 4000 0000 0000 0002</li>
+                </ul>
+                <p class="mb-1">Use any future expiration date (e.g., 12/34)</p>
+                <p class="mb-1">Use any 3-digit CVC</p>
+                <p class="mb-0">
+                    <a href="https://stripe.com/docs/testing#cards" target="_blank" class="btn btn-sm btn-outline-info">
+                        More test cards
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

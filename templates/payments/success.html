@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Successful - Stripe Demo Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card text-center">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Payment Successful! 🎉</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                    </svg>
+                </div>
+                
+                <h4 class="card-title">Thank You!</h4>
+                <p class="card-text">Your demo payment was successful.</p>
+                
+                {% if payment_record %}
+                <div class="alert alert-info text-start">
+                    <h6>Payment Details:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Product:</strong> {{ payment_record.product_name }}</li>
+                        <li><strong>Amount:</strong> ${{ payment_record.amount|floatformat:2 }}</li>
+                        <li><strong>Email:</strong> {{ payment_record.customer_email }}</li>
+                        <li><strong>Status:</strong> {{ payment_record.status }}</li>
+                        <li><strong>Checkout ID:</strong> <small>{{ payment_record.stripe_checkout_id|truncatechars:20 }}</small></li>
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <a href="{% url 'home' %}" class="btn btn-primary me-2">
+                        Back to Products
+                    </a>
+                    <a href="{% url 'payment_history' %}" class="btn btn-outline-secondary">
+                        View Payment History
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                This was a test payment. No real money was charged.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
